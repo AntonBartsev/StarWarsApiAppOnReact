@@ -1,21 +1,9 @@
 import React from "react";
 import { List } from "immutable"
 import CharacterInfo from "./CharacterInfo"
-// Style of input field
-const inputStyle = {
-    width: "200px",
-    borderRadius: "10px",
-    WebkitBoxShadow: "0px 6px 24px 0px rgba(0,0,0,0.08)",
-    MozBoxShadow: "0px 6px 24px 0px rgba(0,0,0,0.08)",
-    boxShadow: "0px 6px 24px 0px rgba(0,0,0,0.08)",
-    border: "none",
-    width: "480px",
-    paddingLeft: "12px",
-    paddingRight: "12px",
-    paddingTop: "12px",
-    paddingBottom: "12px"
-}
+import './Components.css'
 
+// Main app structure
 class MainDiv extends React.Component {
     constructor(props) {
         super(props);
@@ -63,8 +51,7 @@ class MainDiv extends React.Component {
         const { response } = this.state
         return <div>
             <h1>Star Wars Characters</h1>
-            <input
-                style={inputStyle}
+            <input className='inputStyle'
                 value={this.state.input}
                 onChange={this.onInputChange}
                 placeholder={"type name of character..."}
@@ -73,8 +60,8 @@ class MainDiv extends React.Component {
                 .map(info =>
                     <CharacterInfo
                         key={response.indexOf(info)}
-                        info={JSON.stringify(this.state.response.get
-                            (response.indexOf(info)))}
+                        info={this.state.response.get
+                            (response.indexOf(info))}
                     />)
             }
         </div>
