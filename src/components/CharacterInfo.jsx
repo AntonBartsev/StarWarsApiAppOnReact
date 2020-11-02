@@ -1,12 +1,8 @@
 import React from "react";
-import './Components.css'
+import "../Styles.css/Components.css"
 
 // Card with information about found character
 class CharacterInfo extends React.Component {
-    constructor(props) {
-        super(props);
-        this.formatInfo = this.formatInfo.bind(this)
-    }
     // Format information fetched from API to present it in the app
     formatInfo(info) {
         // Name of character presented as string
@@ -17,7 +13,7 @@ class CharacterInfo extends React.Component {
         const genderInfo = "Gender: " + info.gender + ", "
         // Mass of character (if mass is unknown, no need to add "kg" clarification)
         const massInfo = "Mass: " + info.mass +
-            (info.mass === "unknown" ? ", " : "kg, ")
+            (info.mass === "unknown" ? "" : "kg")
         // Array of films character participated in
         const filmsOutputArr = []
         for (const film of info.films) {
@@ -41,14 +37,14 @@ class CharacterInfo extends React.Component {
             {arrayOfInfoPoints.map(el =>
                 <div
                     key={arrayOfInfoPoints.indexOf(el)}
-                    className='infoStyle'>
+                    className="info">
                     {el}
                 </div>)
             }
-            <h2 className='h2Style'>Films: </h2>
+            <h2 className="h2 films">Films: </h2>
             {
                 arrayOfFilms.map(el =>
-                    <div className='infoStyle'
+                    <div className="info"
                         key={arrayOfFilms.indexOf(el)}>
                         {el}
                     </div>)
