@@ -1,5 +1,5 @@
 import React from "react";
-import "../Styles.css/Components.css"
+import "../styles/Components.css"
 
 // Card with information about found character
 class CharacterInfo extends React.Component {
@@ -33,19 +33,19 @@ class CharacterInfo extends React.Component {
         // to put separately on page
         arrayOfInfoPoints.splice(arrayOfInfoPoints.length - 1, 1)
 
-        return <div className='characterInfoParentDiv'>
-            {arrayOfInfoPoints.map(el =>
+        return <div class="characterInfoParentDiv">
+            {arrayOfInfoPoints.map((el, key) =>
                 <div
-                    key={arrayOfInfoPoints.indexOf(el)}
-                    className="info">
+                    key={key}
+                    class="info">
                     {el}
                 </div>)
             }
-            <h2 className="h2 films">Films: </h2>
+            <h2 class="films">Films: </h2>
             {
-                arrayOfFilms.map(el =>
-                    <div className="info"
-                        key={arrayOfFilms.indexOf(el)}>
+                arrayOfFilms.map((el, key) =>
+                    <div class="info"
+                        key={key}>
                         {el}
                     </div>)
             }
