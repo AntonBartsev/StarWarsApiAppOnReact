@@ -1,0 +1,30 @@
+/* Style of "Films: " heading */
+h2.films {
+    text-align: left;
+    margin-bottom: 0px
+}
+
+
+/* Style of single info point e.g. mass / skin color / name */
+.info {
+    text-align: left;
+}
+
+
+
+/* Style for the parent div of info point */
+.characterInfoParentDiv  {
+    position: relative;
+    height: auto;
+    width: 480px;
+    top: 50px;
+    border-width: 0.1px;
+    border-radius: 10px;
+    margin: auto;
+    margin-bottom: 32px;
+    padding: 16px 16px 16px 16px;
+    -webkit-box-shadow: 0px 10px 48px 0px rgba(0,0,0,0.08);
+    -moz-box-shadow: 0px 10px 48px 0px rgba(0, 0, 0, 0.08);
+    box-shadow: 0px 10px 48px 0px rgba(0,0,0,0.08)
+}
+
