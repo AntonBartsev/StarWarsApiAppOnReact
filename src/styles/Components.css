@@ -1,7 +1,14 @@
 /* Style of "Films: " heading */
 h2.films {
     text-align: left;
-    margin-bottom: 0px
+    margin-bottom: 0px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+h2.name{
+    text-align: left;
+    margin-top: 0px;
 }
 
 

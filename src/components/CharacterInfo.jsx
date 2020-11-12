@@ -6,7 +6,7 @@ class CharacterInfo extends React.Component {
     // Format information fetched from API to present it in the app
     formatInfo(info) {
         // Name of character presented as string
-        const nameInfo = "Name: " + info.name + ", "
+        const nameInfo = info.name
         // Skin color of character
         const skinColorInfo = "Skin color: " + info.skin_color + ", "
         // Gender of character
@@ -23,28 +23,29 @@ class CharacterInfo extends React.Component {
         }
         return [nameInfo, skinColorInfo, genderInfo, massInfo, filmsOutputArr]
     }
-
     render() {
+        const { info } = this.props
         // Array of information about characters
-        const arrayOfInfoPoints = this.formatInfo(this.props.info)
+        const arrayOfInfoPoints = this.formatInfo(info)
         // Array of films 
         const arrayOfFilms = arrayOfInfoPoints[arrayOfInfoPoints.length - 1]
         // Remove array of films from main info array 
         // to put separately on page
         arrayOfInfoPoints.splice(arrayOfInfoPoints.length - 1, 1)
-
-        return <div class="characterInfoParentDiv">
+        const nameOfCharecter = arrayOfInfoPoints.splice(0, 1)
+        return <div className="characterInfoParentDiv">
+            <h2 className="name">{nameOfCharecter} </h2>
             {arrayOfInfoPoints.map((el, key) =>
                 <div
                     key={key}
-                    class="info">
+                    className="info">
                     {el}
                 </div>)
             }
-            <h2 class="films">Films: </h2>
+            <h2 className="films">Films: </h2>
             {
                 arrayOfFilms.map((el, key) =>
-                    <div class="info"
+                    <div className="info"
                         key={key}>
                         {el}
                     </div>)
