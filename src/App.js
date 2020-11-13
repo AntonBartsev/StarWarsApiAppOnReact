@@ -20,7 +20,7 @@ class App extends React.Component {
     }
     this.onInputChange = this.onInputChange.bind(this);
     this.fetchName = this.fetchName.bind(this)
-    this.setOutput = this.setOutput.bind(this)
+    this.getSearchOutput = this.getSearchOutput.bind(this)
   }
   onInputChange(event) {
     // Input of user
@@ -54,7 +54,7 @@ class App extends React.Component {
   }
   // Decide what message will be shown to user 
   // after performing the search
-  setOutput() {
+  getSearchOutput() {
     const { response, foundOrSearched } = this.state
     // Initial state
     if (foundOrSearched === null) {
@@ -80,7 +80,6 @@ class App extends React.Component {
     }
   }
   render() {
-    const foundOrSearched = this.state
     return <div className="App">
       <h1>Star Wars Characters</h1>
       <input className="mainInput"
@@ -88,7 +87,7 @@ class App extends React.Component {
         onChange={this.onInputChange}
         placeholder={"type name of character..."}
         onKeyDown={this.fetchName} />
-      {this.setOutput(foundOrSearched)}
+      {this.getSearchOutput()}
     </div>
   }
 }

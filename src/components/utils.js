@@ -1,4 +1,6 @@
-export const warningImg = <svg xmlns="http://www.w3.org/2000/svg"
+import React from "react";
+
+const warningImg = <svg xmlns="http://www.w3.org/2000/svg"
     width="22"
     height="22"
     viewBox="0 0 24 24">
@@ -14,3 +16,5 @@ export const warningImg = <svg xmlns="http://www.w3.org/2000/svg"
 1.28 1.451l-.757 6.053c-.035.283-.276.496-.561.496s-.526-.213-.562-.496l-.748-5.978zm1.31 10.724c-.69 0-1.25-.56-1.25-1.25s.56-1.25
 1.25-1.25 1.25.56 1.25
 1.25-.56 1.25-1.25 1.25z"/></svg>
+
+export default warningImg;
