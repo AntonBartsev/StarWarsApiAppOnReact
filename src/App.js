@@ -13,10 +13,11 @@ class App extends React.Component {
       // Input field value
       input: "",
       // List of characters found by name
-      response: List([]),
-      // Indicates whether character is found or not 
-      // null means the initial state of the app
-      foundOrSearched: null
+      // null - no search performed
+      response: null,
+      // true - pending response started
+      // false - pending response stopped
+      bIsPendingResponse: false
     }
     this.onInputChange = this.onInputChange.bind(this);
     this.fetchName = this.fetchName.bind(this)
@@ -36,6 +37,10 @@ class App extends React.Component {
     const name = event.target.value;
     // Check if user pressed enter
     if (event.key === "Enter") {
+      this.setState({
+        ...this.state,
+        bIsPendingResponse: true
+      })
       // Find character by input of user from API
       fetch("https://swapi.dev/api/people/?search=" + name)
         .then(Response => {
@@ -46,25 +51,29 @@ class App extends React.Component {
           this.setState({
             ...this.state,
             response: List(jsonData.results),
-            // Check if there is any character found and set output prop
-            foundOrSearched: List(jsonData.results).size > 0
-              ? true : false
+            bIsPendingResponse: false
           }))
     }
   }
   // Decide what message will be shown to user 
-  // after performing the search
+  // after and while performing the search
   getSearchOutput() {
-    const { response, foundOrSearched } = this.state
+    const { response, bIsPendingResponse } = this.state
+    // Loading animation while pending response
+    if (bIsPendingResponse) {
+      return <div className="searchOutputContainer">
+        <div className="ldsDualRing"></div>
+      </div>
+    }
     // Initial state
-    if (foundOrSearched === null) {
-      return <div className="outputContainer">
+    if (response === null) {
+      return <div className="searchOutputContainer">
         <p>type name of character and press Enter</p>
       </div>
     }
     // If character is not found by name
-    else if (!foundOrSearched) {
-      return <div className="outputContainer">
+    else if (response.size === 0) {
+      return <div className="searchOutputContainer">
         {warningImg}
         <p className="warning">nothing found</p>
       </div>
