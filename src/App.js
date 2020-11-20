@@ -3,7 +3,7 @@ import React from "react";
 import { List } from "immutable"
 import CharacterInfo from "./components/CharacterInfo"
 import "./styles/Components.css"
-
+import warningImg from "./components/utils"
 
 // Main app structure
 class App extends React.Component {
@@ -13,10 +13,15 @@ class App extends React.Component {
       // Input field value
       input: "",
       // List of characters found by name
-      response: List([])
+      // null - no search performed
+      response: null,
+      // true - pending response started
+      // false - pending response stopped
+      bIsPendingResponse: false
     }
     this.onInputChange = this.onInputChange.bind(this);
     this.fetchName = this.fetchName.bind(this)
+    this.getSearchOutput = this.getSearchOutput.bind(this)
   }
   onInputChange(event) {
     // Input of user
@@ -27,12 +32,15 @@ class App extends React.Component {
       input: text
     })
   }
-
   fetchName(event) {
     // Get input of user        
     const name = event.target.value;
     // Check if user pressed enter
     if (event.key === "Enter") {
+      this.setState({
+        ...this.state,
+        bIsPendingResponse: true
+      })
       // Find character by input of user from API
       fetch("https://swapi.dev/api/people/?search=" + name)
         .then(Response => {
@@ -42,27 +50,53 @@ class App extends React.Component {
           // Update state with found characters
           this.setState({
             ...this.state,
-            response: List(jsonData.results)
+            response: List(jsonData.results),
+            bIsPendingResponse: false
           }))
     }
   }
-
-  render() {
-    const { response } = this.state
-    return <div class="App">
-      <h1>Star Wars Characters</h1>
-      <input class="mainInput"
-        value={this.state.input}
-        onChange={this.onInputChange}
-        placeholder={"type name of character..."}
-        onKeyDown={this.fetchName} />
-      {response
+  // Decide what message will be shown to user 
+  // after and while performing the search
+  getSearchOutput() {
+    const { response, bIsPendingResponse } = this.state
+    // Loading animation while pending response
+    if (bIsPendingResponse) {
+      return <div className="searchOutputContainer">
+        <div className="ldsDualRing"></div>
+      </div>
+    }
+    // Initial state
+    if (response === null) {
+      return <div className="searchOutputContainer">
+        <p>type name of character and press Enter</p>
+      </div>
+    }
+    // If character is not found by name
+    else if (response.size === 0) {
+      return <div className="searchOutputContainer">
+        {warningImg}
+        <p className="warning">nothing found</p>
+      </div>
+    }
+    // If character is found by name
+    else {
+      return response
         .map((info, key) =>
           <CharacterInfo
             key={key}
             info={info}
           />)
-      }
+    }
+  }
+  render() {
+    return <div className="App">
+      <h1>Star Wars Characters</h1>
+      <input className="mainInput"
+        value={this.state.input}
+        onChange={this.onInputChange}
+        placeholder={"type name of character..."}
+        onKeyDown={this.fetchName} />
+      {this.getSearchOutput()}
     </div>
   }
 }

@@ -17,3 +17,64 @@ input.mainInput {
 }
 
 
+div.searchOutputContainer {
+  margin-top: 60px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+p.warning {
+  color: red;
+}
+
+
+.ldsDualRing {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+}
+.ldsDualRing:after {
+  content: " ";
+  display: block;
+  width: 32px;
+  height:32px;
+  margin: 4px;
+  border-radius: 50%;
+  border: 3px solid black;
+  border-color: black transparent black transparent;
+  animation: ldsDualRing 1.2s linear infinite;
+}
+@keyframes ldsDualRing {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+.ldsDualRing {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+}
+.ldsDualRing:after {
+  content: " ";
+  display: block;
+  width: 32px;
+  height: 32px;
+  margin: 4px;
+  border-radius: 50%;
+  border: 3px solid black;
+  border-color: black transparent black transparent;
+  animation: ldsDualRing 1.2s linear infinite;
+}
+@keyframes ldsDualRing {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
