@@ -1,13 +1,24 @@
 import "./styles/App.css";
 import React from "react";
 import { List } from "immutable"
-import CharacterInfo from "./components/CharacterInfo"
+import CharacterInfo from "../src/components/CharacterInfo"
 import "./styles/Components.css"
-import warningImg from "./components/utils"
+import warningImg from "../src/components/utils"
+import responseData from "../src/components/CharacterInfo"
+
+
+export type appProps = {
+  info?: object | responseData
+}
+type appState = {
+  input: string,
+  response: null | List<Object>,
+  bIsPendingResponse: boolean
+}
 
 // Main app structure
-class App extends React.Component {
-  constructor(props) {
+class App extends React.Component<appProps, appState> {
+  constructor(props: appProps) {
     super(props);
     this.state = {
       // Input field value
@@ -23,18 +34,18 @@ class App extends React.Component {
     this.fetchName = this.fetchName.bind(this)
     this.getSearchOutput = this.getSearchOutput.bind(this)
   }
-  onInputChange(event) {
+  onInputChange(event: React.FormEvent<HTMLInputElement>) {
     // Input of user
-    const text = event.target.value;
+    const text = event.currentTarget.value;
     // Update input field value to present new input 
     this.setState({
       ...this.state,
       input: text
     })
   }
-  fetchName(event) {
+  fetchName(event: React.KeyboardEvent<object>) {
     // Get input of user        
-    const name = event.target.value;
+    const name = (event.currentTarget as HTMLInputElement).value;
     // Check if user pressed enter
     if (event.key === "Enter") {
       this.setState({
@@ -58,7 +69,8 @@ class App extends React.Component {
   // Decide what message will be shown to user 
   // after and while performing the search
   getSearchOutput() {
-    const { response, bIsPendingResponse } = this.state
+    const { bIsPendingResponse, response } = this.state
+    const responseAsList = response as List<Object>
     // Loading animation while pending response
     if (bIsPendingResponse) {
       return <div className="searchOutputContainer">
@@ -72,7 +84,7 @@ class App extends React.Component {
       </div>
     }
     // If character is not found by name
-    else if (response.size === 0) {
+    else if (responseAsList.size === 0) {
       return <div className="searchOutputContainer">
         {warningImg}
         <p className="warning">nothing found</p>
@@ -80,8 +92,8 @@ class App extends React.Component {
     }
     // If character is found by name
     else {
-      return response
-        .map((info, key) =>
+      return responseAsList
+        .map((info: object, key: number) =>
           <CharacterInfo
             key={key}
             info={info}

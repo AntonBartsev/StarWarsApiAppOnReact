@@ -1,24 +1,38 @@
 import React from "react";
 import "../styles/Components.css"
 
+
+interface responseData {
+    name: string,
+    skin_color: string,
+    gender: string,
+    mass: number | string,
+    films: Array<string>
+}
+
+type infoProps = {
+    info: object | responseData
+}
+
 // Card with information about found character
-class CharacterInfo extends React.Component {
+class CharacterInfo extends React.Component<infoProps> {
     // Format information fetched from API to present it in the app
-    formatInfo(info) {
+    formatInfo(info: object) {
+        const infoAsResponseData = info as responseData
         // Name of character presented as string
-        const nameInfo = info.name
+        const nameInfo = infoAsResponseData.name
         // Skin color of character
-        const skinColorInfo = "Skin color: " + info.skin_color + ", "
+        const skinColorInfo = "Skin color: " + infoAsResponseData.skin_color + ", "
         // Gender of character
-        const genderInfo = "Gender: " + info.gender + ", "
+        const genderInfo = "Gender: " + infoAsResponseData.gender + ", "
         // Mass of character (if mass is unknown, no need to add "kg" clarification)
-        const massInfo = "Mass: " + info.mass +
-            (info.mass === "unknown" ? "" : "kg")
+        const massInfo = "Mass: " + infoAsResponseData.mass +
+            (infoAsResponseData.mass === "unknown" ? "" : "kg")
         // Array of films character participated in
         const filmsOutputArr = []
-        for (const film of info.films) {
+        for (const film of infoAsResponseData.films) {
             // Film as string
-            const output = (info.films.indexOf(film) + 1) + ": " + film
+            const output = (infoAsResponseData.films.indexOf(film) + 1) + ": " + film
             filmsOutputArr.push(output)
         }
         return [nameInfo, skinColorInfo, genderInfo, massInfo, filmsOutputArr]
@@ -28,7 +42,7 @@ class CharacterInfo extends React.Component {
         // Array of information about characters
         const arrayOfInfoPoints = this.formatInfo(info)
         // Array of films 
-        const arrayOfFilms = arrayOfInfoPoints[arrayOfInfoPoints.length - 1]
+        const arrayOfFilms = arrayOfInfoPoints[arrayOfInfoPoints.length - 1] as Array<string>
         // Remove array of films from main info array 
         // to put separately on page
         arrayOfInfoPoints.splice(arrayOfInfoPoints.length - 1, 1)
@@ -44,7 +58,7 @@ class CharacterInfo extends React.Component {
             }
             <h2 className="films">Films: </h2>
             {
-                arrayOfFilms.map((el, key) =>
+                arrayOfFilms.map((el: string, key: number) =>
                     <div className="info"
                         key={key}>
                         {el}
