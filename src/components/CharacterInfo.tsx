@@ -2,8 +2,7 @@ import React from "react";
 import "../styles/Components.css"
 
 
-
-interface ResponseData {
+interface responseData {
     name: string,
     skin_color: string,
     gender: string,
@@ -11,15 +10,15 @@ interface ResponseData {
     films: Array<string>
 }
 
-export type InfoProps = {
-    info?: ResponseData
+type infoProps = {
+    info: object | responseData
 }
 
 // Card with information about found character
-class CharacterInfo extends React.Component<InfoProps> {
+class CharacterInfo extends React.Component<infoProps> {
     // Format information fetched from API to present it in the app
-    formatInfo(info: ResponseData | undefined) {
-        const infoAsResponseData = info as ResponseData
+    formatInfo(info: object) {
+        const infoAsResponseData = info as responseData
         // Name of character presented as string
         const nameInfo = infoAsResponseData.name
         // Skin color of character
