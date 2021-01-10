@@ -4,21 +4,20 @@ import { List } from "immutable"
 import CharacterInfo from "../src/components/CharacterInfo"
 import "./styles/Components.css"
 import warningImg from "../src/components/utils"
-import responseData from "../src/components/CharacterInfo"
+import { InfoProps } from "../src/components/CharacterInfo"
 
 
-export type appProps = {
-  info?: object | responseData
-}
-type appState = {
+
+
+type AppState = {
   input: string,
-  response: null | List<Object>,
+  response: null | List<Response>,
   bIsPendingResponse: boolean
 }
 
 // Main app structure
-class App extends React.Component<appProps, appState> {
-  constructor(props: appProps) {
+class App extends React.Component<InfoProps, AppState> {
+  constructor(props: InfoProps) {
     super(props);
     this.state = {
       // Input field value
@@ -93,7 +92,7 @@ class App extends React.Component<appProps, appState> {
     // If character is found by name
     else {
       return responseAsList
-        .map((info: object, key: number) =>
+        .map((info: any, key: number) =>
           <CharacterInfo
             key={key}
             info={info}
@@ -101,7 +100,7 @@ class App extends React.Component<appProps, appState> {
     }
   }
   render() {
-    return <div className="App">
+    return <div className="App" >
       <h1>Star Wars Characters</h1>
       <input className="mainInput"
         value={this.state.input}
