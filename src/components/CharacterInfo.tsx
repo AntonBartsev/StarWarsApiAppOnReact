@@ -10,14 +10,14 @@ interface ResponseData {
     films: Array<string>
 }
 
-type InfoProps = {
-    info?: ResponseData
+export type InfoProps = {
+    info: ResponseData | {}
 }
 
 // Card with information about found character
 class CharacterInfo extends React.Component<InfoProps> {
     // Format information fetched from API to present it in the app
-    formatInfo(info: ResponseData | undefined) {
+    formatInfo(info: ResponseData | {}) {
         const infoAsResponseData = info as ResponseData
         // Name of character presented as string
         const nameInfo = infoAsResponseData.name

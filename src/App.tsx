@@ -4,18 +4,19 @@ import { List } from "immutable"
 import CharacterInfo from "../src/components/CharacterInfo"
 import "./styles/Components.css"
 import warningImg from "../src/components/utils"
-import InfoProps from "../src/components/CharacterInfo"
+import ResponseData from "../src/components/CharacterInfo"
 
 
 type AppState = {
   input: string,
-  response: null | List<Object>,
+  response: null | List<ResponseData>,
   bIsPendingResponse: boolean
 }
 
+
 // Main app structure
-class App extends React.Component<InfoProps, AppState> {
-  constructor(props: InfoProps) {
+class App extends React.Component<{}, AppState> {
+  constructor(props: AppState) {
     super(props);
     this.state = {
       // Input field value
@@ -67,7 +68,7 @@ class App extends React.Component<InfoProps, AppState> {
   // after and while performing the search
   getSearchOutput() {
     const { bIsPendingResponse, response } = this.state
-    const responseAsList = response as List<Object>
+    const responseAsList = response as List<ResponseData>
     // Loading animation while pending response
     if (bIsPendingResponse) {
       return <div className="searchOutputContainer">
@@ -90,7 +91,7 @@ class App extends React.Component<InfoProps, AppState> {
     // If character is found by name
     else {
       return responseAsList
-        .map((info: any, key: number) =>
+        .map((info: ResponseData, key: number) =>
           <CharacterInfo
             key={key}
             info={info}
