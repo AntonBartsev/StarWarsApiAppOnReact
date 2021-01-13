@@ -4,7 +4,7 @@ import { List } from "immutable"
 import CharacterInfo from "../src/components/CharacterInfo"
 import "./styles/Components.css"
 import warningImg from "../src/components/utils"
-import ResponseData from "../src/components/CharacterInfo"
+import { ResponseData } from "../src/components/CharacterInfo"
 
 
 type AppState = {

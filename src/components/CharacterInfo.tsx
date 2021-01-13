@@ -2,7 +2,8 @@ import React from "react";
 import "../styles/Components.css"
 
 
-interface ResponseData {
+
+export interface ResponseData {
     name: string,
     skin_color: string,
     gender: string,
@@ -10,29 +11,28 @@ interface ResponseData {
     films: Array<string>
 }
 
-export type InfoProps = {
-    info: ResponseData | {}
+type InfoProps = {
+    info: ResponseData
 }
 
 // Card with information about found character
 class CharacterInfo extends React.Component<InfoProps> {
     // Format information fetched from API to present it in the app
-    formatInfo(info: ResponseData | {}) {
-        const infoAsResponseData = info as ResponseData
+    formatInfo(info: ResponseData) {
         // Name of character presented as string
-        const nameInfo = infoAsResponseData.name
+        const nameInfo = info.name
         // Skin color of character
-        const skinColorInfo = "Skin color: " + infoAsResponseData.skin_color + ", "
+        const skinColorInfo = "Skin color: " + info.skin_color + ", "
         // Gender of character
-        const genderInfo = "Gender: " + infoAsResponseData.gender + ", "
+        const genderInfo = "Gender: " + info.gender + ", "
         // Mass of character (if mass is unknown, no need to add "kg" clarification)
-        const massInfo = "Mass: " + infoAsResponseData.mass +
-            (infoAsResponseData.mass === "unknown" ? "" : "kg")
+        const massInfo = "Mass: " + info.mass +
+            (info.mass === "unknown" ? "" : "kg")
         // Array of films character participated in
         const filmsOutputArr = []
-        for (const film of infoAsResponseData.films) {
+        for (const film of info.films) {
             // Film as string
-            const output = (infoAsResponseData.films.indexOf(film) + 1) + ": " + film
+            const output = (info.films.indexOf(film) + 1) + ": " + film
             filmsOutputArr.push(output)
         }
         return [nameInfo, skinColorInfo, genderInfo, massInfo, filmsOutputArr]
