@@ -1,5 +1,5 @@
 import "./styles/App.css";
-import React from "react";
+import React, { useState } from "react";
 import { List, Set } from "immutable"
 import CharacterInfo from "../src/components/CharacterInfo"
 import "./styles/Components.css"
@@ -8,81 +8,43 @@ import { ResponseData } from "../src/components/CharacterInfo"
 import { debounce } from "lodash"
 
 
-
-type AppState = {
-  // Input field value
-  input: string,
-  // List of characters found by name
-  // null - no search performed
-  response: null | List<ResponseData>,
-  // true - pending response started
-  // false - pending response stopped
-  bIsPendingResponse: boolean,
-  // Set of names of cards with activated star
-  setOfActivatedCards: Set<string[]>,
-  // list of data of cards with activated star
-  listOfActivatedCards: List<ResponseData>
-}
-
-
 // Main app structure
-class App extends React.Component<{}, AppState> {
-  private debouncedFetchName: Function
-
-  constructor(props: AppState) {
-    super(props);
-    this.state = {
-      input: "",
-      response: null,
-      bIsPendingResponse: false,
-      setOfActivatedCards: Set(),
-      listOfActivatedCards: List()
-    }
-    this.onInputChange = this.onInputChange.bind(this);
-    this.getSearchOutput = this.getSearchOutput.bind(this);
-    this.debouncedFetchName = debounce(this.fetchName, 500);
-    this.setCardAction = this.setCardAction.bind(this)
-  }
+const App = () => {
+  const [input, setInput] = useState<string>("")
+  const [response, setResponse] = useState<null | List<ResponseData>>(null)
+  const [bIsPendingResponse, setIsPendingResponse] = useState<boolean>(false)
+  const [setOfActivatedCards, setSetOfActivatedCards] = useState<Set<string[]>>(Set())
+  const [listOfActivatedCards, setListOfActivatedCards] = useState<List<ResponseData>>(List())
 
   // Either delete or add card when star is clicked
-  setCardAction(bIsNameContained: boolean, name: string[], id: number) {
-    const { setOfActivatedCards, response, listOfActivatedCards } = this.state;
+  const setCardAction = (bIsNameContained: boolean, name: string[], id: number) => {
     const responseAsList = response as List<ResponseData>
     const responseData = responseAsList.get(id) as ResponseData
     // If name is contained in setOfActivatedCards, delete card's name and data
     if (bIsNameContained) {
-      this.setState({
-        ...this.state,
-        // Delete name from the set
-        setOfActivatedCards: setOfActivatedCards.delete(name),
-        // Delete data by id from the list
-        listOfActivatedCards: listOfActivatedCards.delete(id)
-      })
+      // Delete name from the set
+      setSetOfActivatedCards(setOfActivatedCards.delete(name))
+      // Delete data by id from the list
+      setListOfActivatedCards(listOfActivatedCards.delete(id))
     }
     // If name is not contained on setOfActivatedCards, add card's name and data
     else {
-      this.setState({
-        ...this.state,
-        // Add name to set
-        setOfActivatedCards: setOfActivatedCards.add(name),
-        // Add data to list
-        listOfActivatedCards: listOfActivatedCards.concat(responseData)
-      })
+      // Add name to set
+      setSetOfActivatedCards(setOfActivatedCards.add(name))
+      // Add data to list
+      setListOfActivatedCards(listOfActivatedCards.concat(responseData))
     }
   }
 
-  onInputChange({ currentTarget: { value } }: React.FormEvent<HTMLInputElement>) {
+  const onInputChange = ({ currentTarget: { value } }: React.FormEvent<HTMLInputElement>) => {
     // Input of user
-    this.debouncedFetchName(value);
+    debouncedFetchName(value);
     // Update input field value to present new input 
-    this.setState({
-      ...this.state,
-      input: value,
-      bIsPendingResponse: true
-    })
+    setInput(value)
+    setIsPendingResponse(true)
   }
 
-  fetchName(name: string) {
+  const fetchName = (name: string) => {
     if (name.length < 1)
       return;
     // Find character by input of user from API
@@ -90,20 +52,17 @@ class App extends React.Component<{}, AppState> {
       .then(Response => {
         return Response.json()
       })
-      .then(jsonData =>
+      .then(jsonData => {
         // Update state with found characters
-        this.setState({
-          ...this.state,
-          response: List(jsonData.results),
-          bIsPendingResponse: false
-        }))
-
+        setResponse(List(jsonData.results))
+        setIsPendingResponse(false)
+      }
+      )
   }
-
+  const debouncedFetchName = debounce(fetchName, 500)
   // Decide what message will be shown to user
   // after and while performing the search
-  getSearchOutput() {
-    const { bIsPendingResponse, response, input, setOfActivatedCards, listOfActivatedCards } = this.state
+  const getSearchOutput = () => {
     const responseAsList = response as List<ResponseData>
     // Loading animation while pending response
     if (bIsPendingResponse && input.length > 0) {
@@ -131,7 +90,7 @@ class App extends React.Component<{}, AppState> {
           <CharacterInfo
             key={key}
             info={info}
-            setStarAction={this.setCardAction}
+            setStarAction={setCardAction}
             setOfActivatedCards={setOfActivatedCards}
             // Id of card in responseAsList
             id={responseAsList.indexOf(info)}
@@ -143,7 +102,7 @@ class App extends React.Component<{}, AppState> {
         <CharacterInfo
           key={key}
           info={info}
-          setStarAction={this.setCardAction}
+          setStarAction={setCardAction}
           setOfActivatedCards={setOfActivatedCards}
           // Id of card in listOfActivatedCards 
           id={listOfActivatedCards.indexOf(info)}
@@ -151,17 +110,15 @@ class App extends React.Component<{}, AppState> {
     }
   }
 
-  render() {
-    return <div className="App">
-      <h1>Star Wars Characters</h1>
-      <input className="mainInput"
-        value={this.state.input}
-        onChange={this.onInputChange}
-        placeholder={"type name of character..."}
-      />
-      {this.getSearchOutput()}
-    </div>
-  }
+  return <div className="App">
+    <h1>Star Wars Characters</h1>
+    <input className="mainInput"
+      value={input}
+      onChange={onInputChange}
+      placeholder={"type name of character..."}
+    />
+    {getSearchOutput()}
+  </div>
 }
 
 export default App;
