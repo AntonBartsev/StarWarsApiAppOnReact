@@ -1,5 +1,5 @@
 import "../styles/Components.css"
-
+import { Set } from "immutable"
 
 
 // Type of card's data
@@ -15,7 +15,7 @@ export interface ResponseData {
 type InfoProps = {
     info: ResponseData,
     setStarAction: (bIsNameContained: boolean, name: string[], id: number) => void
-    setOfActivatedCards: import("c:/Coding/React coding/api_type_script/node_modules/immutable/dist/immutable-nonambient").Set<string[]>,
+    setOfActivatedCards: Set<string[]>,
     id: number
 }
 
