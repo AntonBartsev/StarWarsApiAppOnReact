@@ -1,6 +1,6 @@
 import "./styles/App.css";
 import React, { useState } from "react";
-import { List, Set } from "immutable"
+import { List, Map } from "immutable"
 import CharacterInfo from "../src/components/CharacterInfo"
 import "./styles/Components.css"
 import warningImg from "../src/components/utils"
@@ -13,26 +13,19 @@ const App = () => {
   const [input, setInput] = useState<string>("")
   const [response, setResponse] = useState<null | List<ResponseData>>(null)
   const [bIsPendingResponse, setIsPendingResponse] = useState<boolean>(false)
-  const [setOfActivatedCards, setSetOfActivatedCards] = useState<Set<string[]>>(Set())
-  const [listOfActivatedCards, setListOfActivatedCards] = useState<List<ResponseData>>(List())
+  const [mapOfActivatedCards, setMapOfActivatedCards] = useState<Map<ResponseData["name"], ResponseData>>(Map())
 
   // Either delete or add card when star is clicked
-  const setCardAction = (bIsNameContained: boolean, name: string[], id: number) => {
-    const responseAsList = response as List<ResponseData>
-    const responseData = responseAsList.get(id) as ResponseData
-    // If name is contained in setOfActivatedCards, delete card's name and data
-    if (bIsNameContained) {
-      // Delete name from the set
-      setSetOfActivatedCards(setOfActivatedCards.delete(name))
-      // Delete data by id from the list
-      setListOfActivatedCards(listOfActivatedCards.delete(id))
+  const setCardAction = (bIsInfoContained: boolean, info: ResponseData) => {
+    // If name is contained in setOfActivatedCards, delete card's info
+    if (bIsInfoContained) {
+      // Delete info from the map
+      setMapOfActivatedCards(mapOfActivatedCards.delete(info.name))
     }
-    // If name is not contained on setOfActivatedCards, add card's name and data
+    // If name is not contained in mapOfActivatedCards, add card's info
     else {
-      // Add name to set
-      setSetOfActivatedCards(setOfActivatedCards.add(name))
-      // Add data to list
-      setListOfActivatedCards(listOfActivatedCards.concat(responseData))
+      // Add info to the map
+      setMapOfActivatedCards(mapOfActivatedCards.set(info.name, info))
     }
   }
 
@@ -71,7 +64,7 @@ const App = () => {
       </div>
     }
     // Initial state
-    if ((response === null || input.length === 0) && listOfActivatedCards.size === 0) {
+    if ((response === null || input.length === 0) && mapOfActivatedCards.size === 0) {
       return <div className="searchOutputContainer">
         <p>type name of Star Wars character</p>
       </div>
@@ -91,22 +84,22 @@ const App = () => {
             key={key}
             info={info}
             setStarAction={setCardAction}
-            setOfActivatedCards={setOfActivatedCards}
-            // Id of card in responseAsList
-            id={responseAsList.indexOf(info)}
+            mapOfActivatedCards={mapOfActivatedCards}
           />)
     }
     // If any card has activated star
-    else if (input.length === 0 && listOfActivatedCards.size > 0) {
-      return listOfActivatedCards.map((info: ResponseData, key: number) =>
+    else if (input.length === 0 && mapOfActivatedCards.size > 0) {
+      // Immutable Map is not fully optimized for the usage as a child, 
+      // so convert it into an Array and take only second element as
+      // the first one is the dublicate of the name already contained 
+      // in the info
+      return mapOfActivatedCards.map((info: ResponseData, key: string) =>
         <CharacterInfo
           key={key}
           info={info}
           setStarAction={setCardAction}
-          setOfActivatedCards={setOfActivatedCards}
-          // Id of card in listOfActivatedCards 
-          id={listOfActivatedCards.indexOf(info)}
-        />)
+          mapOfActivatedCards={mapOfActivatedCards}
+        />).toArray().map(el => el[1])
     }
   }
 

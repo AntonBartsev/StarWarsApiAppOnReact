@@ -1,5 +1,6 @@
 import "../styles/Components.css"
-import { Set } from "immutable"
+import { List, Map } from "immutable"
+
 
 
 // Type of card's data
@@ -8,24 +9,22 @@ export interface ResponseData {
     skin_color: string,
     gender: string,
     mass: number | string,
-    films: Array<string>
+    films: List<string>
 }
 
 // Types of props passed from App.tsx
 type InfoProps = {
     info: ResponseData,
-    setStarAction: (bIsNameContained: boolean, name: string[], id: number) => void
-    setOfActivatedCards: Set<string[]>,
-    id: number
+    setStarAction: (bIsInfoContained: boolean, info: ResponseData) => void
+    mapOfActivatedCards: Map<ResponseData["name"], ResponseData>
 }
 
 const CharacterInfo = (props: InfoProps) => {
-    const { info, setOfActivatedCards, id, setStarAction } = props
+    const { info, mapOfActivatedCards, setStarAction } = props
 
     // Add or remove card from initial page by clicking on star 
     const toggleStar = () => {
-        const nameOfCharAsStrArr = nameOfCharacter[0] as string[]
-        setStarAction(setOfActivatedCards.contains(nameOfCharAsStrArr), nameOfCharAsStrArr, id)
+        setStarAction(mapOfActivatedCards.has(info.name), info)
     }
 
     // Format information fetched from API to present it in the app
@@ -37,22 +36,17 @@ const CharacterInfo = (props: InfoProps) => {
         // Mass of character (if mass is unknown, no need to add "kg" clarification)
         const massInfo = "Mass: " + mass +
             (mass === "unknown" ? "" : "kg")
-        // Array of films character participated in
-        const filmsOutputArr = []
-        for (const film of films) {
-            // Film as string
-            const output = (films.indexOf(film) + 1) + ": " + film
-            filmsOutputArr.push(output)
-        }
-        return [name, skinColorInfo, genderInfo, massInfo, filmsOutputArr]
+        // format films in the List 
+        films.map(film => (films.indexOf(film) + 1) + ": " + film)
+        return [name, skinColorInfo, genderInfo, massInfo, films]
     }
 
     const arrayOfInfoPoints = formatInfo(info)
 
-    // Array of films 
-    const arrayOfFilms = arrayOfInfoPoints[arrayOfInfoPoints.length - 1] as Array<string>
+    // List of films 
+    const arrayOfFilms = arrayOfInfoPoints[arrayOfInfoPoints.length - 1] as List<string>
 
-    // Remove array of films from main info array 
+    // Remove array of films from main info List
     // to put separately on page
     arrayOfInfoPoints.splice(arrayOfInfoPoints.length - 1, 1)
 
@@ -60,9 +54,9 @@ const CharacterInfo = (props: InfoProps) => {
     const nameOfCharacter = arrayOfInfoPoints.splice(0, 1)
 
     // Change class name of star depending on 
-    // existence of card's name in the setOfActivatedCards
+    // existence of card's info in the mapOfActivatedCards
     const starClass =
-        props.setOfActivatedCards.contains(nameOfCharacter[0] as string[])
+        props.mapOfActivatedCards.has(info.name)
             ?
             "zmdi zmdi-star zmdi-hc-3x"
             :
