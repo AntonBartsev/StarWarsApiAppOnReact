@@ -15,16 +15,16 @@ export interface ResponseData {
 // Types of props passed from App.tsx
 type InfoProps = {
     info: ResponseData,
-    setStarAction: (bIsInfoContained: boolean, info: ResponseData) => void
+    toggleCharacterInfoIsFavorite: (bIsInfoContained: boolean, info: ResponseData) => void
     mapOfActivatedCards: Map<ResponseData["name"], ResponseData>
 }
 
 const CharacterInfo = (props: InfoProps) => {
-    const { info, mapOfActivatedCards, setStarAction } = props
+    const { info, mapOfActivatedCards, toggleCharacterInfoIsFavorite } = props
 
     // Add or remove card from initial page by clicking on star 
     const toggleStar = () => {
-        setStarAction(mapOfActivatedCards.has(info.name), info)
+        toggleCharacterInfoIsFavorite(mapOfActivatedCards.has(info.name), info)
     }
 
     // Format information fetched from API to present it in the app

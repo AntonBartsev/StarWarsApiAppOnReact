@@ -16,7 +16,7 @@ const App = () => {
   const [mapOfActivatedCards, setMapOfActivatedCards] = useState<Map<ResponseData["name"], ResponseData>>(Map())
 
   // Either delete or add card when star is clicked
-  const setCardAction = (bIsInfoContained: boolean, info: ResponseData) => {
+  const toggleCharacterInfoIsFavorite = (bIsInfoContained: boolean, info: ResponseData) => {
     // If name is contained in setOfActivatedCards, delete card's info
     if (bIsInfoContained) {
       // Delete info from the map
@@ -83,7 +83,7 @@ const App = () => {
           <CharacterInfo
             key={key}
             info={info}
-            setStarAction={setCardAction}
+            toggleCharacterInfoIsFavorite={toggleCharacterInfoIsFavorite}
             mapOfActivatedCards={mapOfActivatedCards}
           />)
     }
@@ -97,7 +97,7 @@ const App = () => {
         <CharacterInfo
           key={key}
           info={info}
-          setStarAction={setCardAction}
+          toggleCharacterInfoIsFavorite={toggleCharacterInfoIsFavorite}
           mapOfActivatedCards={mapOfActivatedCards}
         />).toArray().map(el => el[1])
     }
